@@ -1,0 +1,53 @@
+name: Build to docs (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+    # docs/ だけの更新で無限ループしないよう除外
+    paths-ignore:
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-to-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build   # 例: dist/ へ出力（VitePressなら .vitepress/dist）
+
+      # CNAME/.nojekyll がある場合は退避
+      - name: Preserve CNAME/.nojekyll
+        run: |
+          mkdir -p _preserve
+          [ -f docs/CNAME ] && cp docs/CNAME _preserve/CNAME || true
+          [ -f docs/.nojekyll ] && cp docs/.nojekyll _preserve/.nojekyll || true
+
+      # docs を差し替え
+      - name: Replace docs
+        run: |
+          rm -rf docs
+          mkdir -p docs
+          # 出力先に合わせて変更（VitePress: .vitepress/dist/*）
+          cp -r dist/* docs/
+          # 退避していたファイルを戻す
+          [ -f _preserve/CNAME ] && cp _preserve/CNAME docs/CNAME || true
+          [ -f _preserve/.nojekyll ] && cp _preserve/.nojekyll docs/.nojekyll || true
+
+      # 変更がある時だけコミット&プッシュ
+      - name: Commit & Push
+        run: |
+          if [ -n "$(git status --porcelain docs)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions
