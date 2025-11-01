@@ -6,6 +6,7 @@ const navItems = [
   { path: '/table', label: 'React Table', icon: '📊' },
   { path: '/virtual', label: 'React Virtual', icon: '📜' },
   { path: '/form', label: 'React Form', icon: '📝' },
+  { path: '/router', label: 'TanStack Router', icon: '🛣️' },
 ];
 
 export function Navigation() {

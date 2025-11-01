@@ -6,6 +6,7 @@ import { QueryPlayground } from './pages/QueryPlayground';
 import { TablePlayground } from './pages/TablePlayground';
 import { VirtualPlayground } from './pages/VirtualPlayground';
 import { FormPlayground } from './pages/FormPlayground';
+import { RouterPlayground } from './pages/RouterPlayground';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,6 +28,7 @@ function App() {
             <Route path="/table" element={<TablePlayground />} />
             <Route path="/virtual" element={<VirtualPlayground />} />
             <Route path="/form" element={<FormPlayground />} />
+            <Route path="/router" element={<RouterPlayground />} />
           </Routes>
         </Layout>
       </BrowserRouter>
