@@ -19,7 +19,7 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename="/trial-tanstack">
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
